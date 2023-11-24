@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='es'>
+
+<head>
+    <style>
+        body {
+            font-family: Sans-serif;
+        }
+
+        .container {
+            width: 600px;
+            padding: 20px;
+            border: 1px solid #DBDBDB;
+            border-radius: 12px;
+        }
+
+        .header {
+            color: #6199c7;
+            display: flex;
+            align-items: center;
+        }
+        .header h1{
+            font-family: 3em;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        p{
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='container'>
+        <h1 class='header'>
+            <img src='https://i.ibb.co/dQTK7wR/logo128.png' /> Hola {{FirstName}}, soy JulioGPT
+        </h1>
+        <p> Te escribo para verificar tu cuenta. <br>
+        El codigo es: <b style='font-size: large; font-weight: bold;'>{{Token}}</b></p>
+    </div>
+</body>
+
+</html>
