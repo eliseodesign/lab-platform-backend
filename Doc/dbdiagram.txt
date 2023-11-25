@@ -1,0 +1,70 @@
+
+Table "User" {
+  "Id" INTEGER [pk, increment]
+  "Password" varchar(255) [not null]
+  "Email" varchar(150) [unique, not null]
+  "RestartAccount" BOOLEAN [default: FALSE]
+  "ConfirmAccount" BOOLEAN [default: FALSE]
+  "Token" varchar(6)
+  "FirstName" varchar(100) [not null]
+  "LastName" varchar(100) [not null]
+  "Banned" BOOLEAN
+  "BadConduct" INTEGER
+  "Img" BYTEA [not null, default: '\\x']
+
+  "Club" VARCHAR(20) 
+  "Rol" VARCHAR(20) [not null]
+}
+
+Table "FeedBack" {
+  "Id" INTEGER [pk, increment]
+  "Message" varchar(200)
+}
+
+
+Table "Article" {
+  "Id" INTEGER [pk, increment]
+  "Title" varchar(100) [not null]
+  "Content" Text [not null]
+  "Description" varchar(200)
+  "Keywords" varchar(60)
+  "CreateAt" Datetime
+  "ArticleState" VARCHAR(20) [not null, note: "postend | archived | inReview"]
+  "ArticleType" VARCHAR(20) [not null, note: "blog | guie | project"]
+  "UserId" INTEGER [not null]
+  "AdminReviewId" INTEGER 
+}
+
+
+// Reaction puede ser un comentario o una reacción tipo emoji
+// sera el tipo emoji si el contenido es \[:[a-zA-Z]+:\]
+
+Table "Reaction" {
+  "Id" INTEGER [pk, not null, increment]
+  "TimeStamp" Datetime 
+  "Content" varchar(300) [not null, note: "comment o emoji. ej de emoji: [:happy:] - osea si valida \[:[a-zA-Z]+:\]"]
+  "UserId" INTEGER [not null]
+  "ArticleId" INTEGER [not null]
+  "ParentId" INTEGER [default: 0]
+}
+
+Table "Notification" {
+  "Id" INTEGER [pk, not null, increment]
+  "TimeStamp" Datetime [default: `GETDATE()`]
+  "Type" Varchar(20) [note: "comment | reaction | newUser"]
+  "ToUser" INTEGER
+  "UserId" INTEGER
+  "ArticleId" INTEGER
+  "IsRead" BOOLEAN [default: FALSE]
+}
+
+Ref:"User"."Id" < "Article"."UserId"
+
+Ref:"User"."Id" < "Article"."AdminReviewId"
+
+
+Ref:"User"."Id" < "Reaction"."UserId"
+
+Ref:"Article"."Id" < "Reaction"."ArticleId"
+
+Ref:"User"."Id" < "Notification"."UserId"
