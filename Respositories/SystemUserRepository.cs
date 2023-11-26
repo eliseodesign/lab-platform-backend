@@ -3,15 +3,15 @@ using LabPlatform.Repositories;
 
 namespace LabPlatform;
 
-public class ClientuserRepository : IGenericRepository<Clientuser>
+public class SystemUserRepository : IGenericRepository<SystemUser>
 {
-  private readonly AuthdbContext _db;
+  private readonly DatabaseContext _db;
 
-  public ClientuserRepository(AuthdbContext db)
+  public SystemUserRepository(DatabaseContext db)
   {
     _db = db;
   }
-  public async Task<bool> Create(Clientuser model)
+  public async Task<bool> Create(SystemUser model)
   {
     try
     {
@@ -26,7 +26,7 @@ public class ClientuserRepository : IGenericRepository<Clientuser>
     }
   }
 
-  public async Task<bool> Update(Clientuser model)
+  public async Task<bool> Update(SystemUser model)
   {
     try
     {
@@ -43,7 +43,7 @@ public class ClientuserRepository : IGenericRepository<Clientuser>
 
   public async Task<bool> Delete(int id)
   {
-    var user = await _db.Clientusers.FindAsync(id);
+    var user = await _db.SystemUsers.FindAsync(id);
     if (user == null)
       return false;
 
@@ -60,14 +60,14 @@ public class ClientuserRepository : IGenericRepository<Clientuser>
     }
   }
 
-  public async Task<IQueryable<Clientuser>> GetAll()
+  public async Task<IQueryable<SystemUser>> GetAll()
   {
-    return await Task.FromResult(_db.Clientusers.AsQueryable());
+    return await Task.FromResult(_db.SystemUsers.AsQueryable());
   }
 
-  public async Task<Clientuser?> GetById(int id)
+  public async Task<SystemUser?> GetById(int id)
   {
-    return await _db.Clientusers.FindAsync(id);
+    return await _db.SystemUsers.FindAsync(id);
   }
 
 }

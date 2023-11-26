@@ -3,15 +3,15 @@ using LabPlatform.Repositories;
 
 namespace LabPlatform;
 
-public class FeedbackRepository : IGenericRepository<Feedback>
+public class FeedbackRepository : IGenericRepository<FeedBack>
 {
-  private readonly AuthdbContext _db;
-  public FeedbackRepository(AuthdbContext db)
+  private readonly DatabaseContext _db;
+  public FeedbackRepository(DatabaseContext db)
   {
     _db = db;
   }
 
-   public async Task<bool> Create(Feedback model)
+   public async Task<bool> Create(FeedBack model)
   {
     try
     {
@@ -26,7 +26,7 @@ public class FeedbackRepository : IGenericRepository<Feedback>
     }
   }
 
-  public async Task<bool> Update(Feedback model)
+  public async Task<bool> Update(FeedBack model)
   {
     try
     {
@@ -43,7 +43,7 @@ public class FeedbackRepository : IGenericRepository<Feedback>
 
   public async Task<bool> Delete(int id)
   {
-    var user = await _db.Feedbacks.FindAsync(id);
+    var user = await _db.FeedBacks.FindAsync(id);
     if (user == null)
       return false;
 
@@ -60,13 +60,13 @@ public class FeedbackRepository : IGenericRepository<Feedback>
     }
   }
 
-  public async Task<IQueryable<Feedback>> GetAll()
+  public async Task<IQueryable<FeedBack>> GetAll()
   {
-    return await Task.FromResult(_db.Feedbacks.AsQueryable());
+    return await Task.FromResult(_db.FeedBacks.AsQueryable());
   }
 
-  public async Task<Feedback?> GetById(int id)
+  public async Task<FeedBack?> GetById(int id)
   {
-    return await _db.Feedbacks.FindAsync(id);
+    return await _db.FeedBacks.FindAsync(id);
   }
 }
