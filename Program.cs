@@ -1,13 +1,16 @@
 using System.Text;
 using LabPlatform;
 using LabPlatform.Models;
+using LabPlatform.Models.DTOs;
 using LabPlatform.Repositories;
+using LabPlatform.Schemas;
 using LabPlatform.Services;
 using LabPlatform.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Nelibur.ObjectMapper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +25,17 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseContext"));
 });
+// configurar Tinny mapper
+TinyMapper.Bind<Article, ArticleDTO>();
+TinyMapper.Bind<ArticleDTO, ArticleMinDTO>();
+TinyMapper.Bind<CreateArticle, Article>();
 
 builder.Services.AddScoped<IGenericRepository<SystemUser>, SystemUserRepository>();
+builder.Services.AddScoped<IGenericRepository<Article>, ArticleRepository>();
 builder.Services.AddScoped<IGenericRepository<FeedBack>, FeedbackRepository>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ISystemUserService, SystemUserService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
