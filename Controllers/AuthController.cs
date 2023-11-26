@@ -14,10 +14,10 @@ namespace LabPlatform;
 public class AuthController : ControllerBase
 {
   private readonly IWebHostEnvironment _webHostEnvironment;
-  private readonly IClienteUserService _userService;
+  private readonly ISystemUserService _userService;
   private readonly IEmailService _emailService;
   private readonly IAuthService _authService;
-  public AuthController(IClienteUserService userService, IWebHostEnvironment webHostEnvironment, IEmailService emailService, IAuthService authService)
+  public AuthController(ISystemUserService userService, IWebHostEnvironment webHostEnvironment, IEmailService emailService, IAuthService authService)
   {
     _userService = userService;
     _webHostEnvironment = webHostEnvironment;
@@ -64,19 +64,18 @@ public class AuthController : ControllerBase
 
     if (await _userService.GetByEmail(usuario.Email) == null)
     {
-      string typeUser = UtilsService.ValidEsfeEmail(usuario.Email) ? "esfe-user" : "no-esfe-user";
+      // string typeUser = UtilsService.ValidEsfeEmail(usuario.Email) ? "esfe-user" : "no-esfe-user";
 
-      Clientuser nuevo = new Clientuser()
+      SystemUser nuevo = new SystemUser()
       {
         Email = usuario.Email,
         Password = UtilsService.ConvertSHA256(usuario.Password),
-        Firstname = usuario.FirstName,
-        Lastname = usuario.LastName,
-        Restartaccount = false,
-        Confirmaccount = false,
+        FirstName = usuario.FirstName,
+        LastName = usuario.LastName,
+        RestartAccount = false,
+        ConfirmAccount = false,
         Token = UtilsService.RandomCode(),
-        Typeuserid = typeUser
-
+        Rol = "reader"
       };
 
       bool respuesta = await _userService.Create(nuevo);
@@ -155,7 +154,7 @@ public class AuthController : ControllerBase
   private string GetFileContent()
   {
     return @"
-       <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang='es'>
 
 <head>
@@ -194,14 +193,15 @@ public class AuthController : ControllerBase
 <body>
     <div class='container'>
         <h1 class='header'>
-            <img src='https://i.ibb.co/dQTK7wR/logo128.png' /> Hola {{FirstName}}, soy JulioGPT
+             Hola {{FirstName}}, te escriba FABLAB ESFE
         </h1>
-        <p> Te escribo para verificar tu cuenta. <br>
+        <p> Vrificar tu cuenta. <br>
         El codigo es: <b style='font-size: large; font-weight: bold;'>{{Token}}</b></p>
     </div>
 </body>
 
 </html>
-       ";
+
+";
   }
 }

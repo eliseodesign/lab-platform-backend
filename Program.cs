@@ -18,17 +18,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AuthdbContext>(options =>
+builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AuthdbContext"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseContext"));
 });
 
-builder.Services.AddScoped<IGenericRepository<Clientuser>, ClientuserRepository>();
-builder.Services.AddScoped<IGenericRepository<Feedback>, FeedbackRepository>();
-builder.Services.AddScoped<IGenericRepository<Typeuser>, TypeuserRepository>();
+builder.Services.AddScoped<IGenericRepository<SystemUser>, SystemUserRepository>();
+builder.Services.AddScoped<IGenericRepository<FeedBack>, FeedbackRepository>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IClienteUserService, ClienteUserService>();
+builder.Services.AddScoped<ISystemUserService, SystemUserService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
