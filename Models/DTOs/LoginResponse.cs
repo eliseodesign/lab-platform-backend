@@ -13,5 +13,5 @@ public class LoginResponse
 
     public bool? Banned { get; set; }
 
-    public string? TypeUserId { get; set; }
+    public string Rol { get; set; } = null!;
 }

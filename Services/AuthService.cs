@@ -10,15 +10,15 @@ namespace LabPlatform;
 public class AuthService : IAuthService
 {
   private readonly IConfiguration _configuration; // para acceder a valores appsettings
-  private readonly IClienteUserService _userService;
+  private readonly ISystemUserService _userService;
 
-  public AuthService(IConfiguration configuration, IClienteUserService userService)
+  public AuthService(IConfiguration configuration, ISystemUserService userService)
   {
     _configuration = configuration;
     _userService = userService;
   }
 
-  private string GenerarToken(string idUsuario, string typeUser)
+  private string GenerarToken(string idUsuario, string rolUser)
   {
 
     var key = _configuration.GetValue<string>("JwtSettings:key");
@@ -26,12 +26,12 @@ public class AuthService : IAuthService
 
     var claims = new ClaimsIdentity();
     claims.AddClaim(new Claim(ClaimTypes.NameIdentifier, idUsuario));
-    claims.AddClaim(new Claim(ClaimTypes.Role, typeUser));
+    claims.AddClaim(new Claim(ClaimTypes.Role, rolUser));
 
     var credencialesToken = new SigningCredentials(
         new SymmetricSecurityKey(keyBytes),
         SecurityAlgorithms.HmacSha256Signature
-        );
+    );
 
     var tokenDescriptor = new SecurityTokenDescriptor
     {
@@ -51,31 +51,33 @@ public class AuthService : IAuthService
   {
     // validar cuenta 
     var exists = await _userService.GetByEmail(auth.Email);
-    if(exists == null) 
-      return new AuthResponse(){ Token = "", Result = false, Message = "No existe el usuario", User = null};
-    
+    if (exists == null)
+      return new AuthResponse() { Token = "", Result = false, Message = "No existe el usuario", User = null };
+
     // validar cuenta confirmada
     bool isVerifiedAccount = await _userService.ValidateConfirm(auth.Email);
-    if(isVerifiedAccount == false)
-      return new AuthResponse(){ Token = "", Result = false, Message = "Debe confirmar su cuenta para iniciar sesión", User = null};
-    
+    if (isVerifiedAccount == false)
+      return new AuthResponse() { Token = "", Result = false, Message = "Debe confirmar su cuenta para iniciar sesión", User = null };
+
     // validar credenciales
     var userFound = await _userService.Validate(auth.Email, auth.Password);
     if (userFound == null)
-      return new AuthResponse(){ Token = "", Result = false, Message = "Contraseña Incorrecta", User = null};
+      return new AuthResponse() { Token = "", Result = false, Message = "Contraseña Incorrecta", User = null };
 
-    string tokenCreado = GenerarToken(userFound.Id.ToString(), userFound.Typeuserid);
+    string tokenCreado = GenerarToken(userFound.Id.ToString(), userFound.Rol);
 
     //string refreshTokenCreado = GenerarRefreshToken();
 
-    LoginResponse user = new LoginResponse(){
+    LoginResponse user = new LoginResponse()
+    {
       Id = userFound.Id,
-      FirstName = userFound.Firstname,
-      LastName = userFound.Lastname,
-      BadConduct = userFound.Badconduct,
+      FirstName = userFound.FirstName,
+      LastName = userFound.LastName,
+      BadConduct = userFound.BadConduct,
       Email = userFound.Email,
-      TypeUserId = userFound.Typeuserid,
-      Banned = userFound.Banned
+      Banned = userFound.Banned,
+      Rol = userFound.Rol
+
     };
 
     return new AuthResponse() { Token = tokenCreado, Result = true, Message = "Ok", User = user };
