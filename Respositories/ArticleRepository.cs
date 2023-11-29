@@ -1,5 +1,6 @@
 using LabPlatform.Models;
 using LabPlatform.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace LabPlatform
         }
         public async Task<IQueryable<Article>> GetAll()
         {
-            IQueryable<Article> query = _db.Articles;
+            IQueryable<Article> query = _db.Articles.Include((art)=> art.SystemUser);
             return query;
         }
         public async Task<Article> GetById(int id)
